@@ -2,19 +2,27 @@
 #include <stdlib.h>
 
 /*
- * STM_state_create
+ * STM_s_create
  *
  * @desc
  *   Creates a state
+ * @param state
+ *   The state to create
+ * @param flags
+ *   The STM_Fs to activate
+ * @param fn_create
+ *   State creation function (on the stack)
+ * @param fn_destroy
+ *   State destroy function (on the stack)
+ * @param fn_update
+ *   State update function
+ * @param fn_draw
+ *   State draw function
+ * @return
+ *   0 on success
  */
-int STM_state_create(struct STM_State *state, const char *name, size_t stack_size, uint8_t flags, STM_create fn_create, STM_destroy fn_destroy, STM_update fn_update, STM_draw fn_draw)
+int STM_s_create(struct STM_S *state, uint8_t flags, STM_create fn_create, STM_destroy fn_destroy, STM_update fn_update, STM_draw fn_draw)
 {
-  state->count = stack_size;
-  if (!(state->data  = malloc(stack_size * sizeof(STM_Data)))) return -1;
-  for (int i = 0; i < 16; ++i) {
-    state->name[i] = *name++;
-    if (!*name) break;
-  }
   state->flags      = flags;
   state->fn_create  = fn_create;
   state->fn_destroy = fn_destroy;
@@ -25,14 +33,18 @@ int STM_state_create(struct STM_State *state, const char *name, size_t stack_siz
 }
 
 /*
- * STM_state_destroy
+ * STM_s_destroy
  *
  * @desc
- *   Destroys a state
+ *   Destroys a state. Used to do
+ *   something but now is just for consistency
+ *   with STM_s_create
+ * @param state
+ *   The state to destroy
+ * @return
+ *   0 on success
  */
-int STM_state_destroy(struct STM_State *state)
+int STM_s_destroy(struct STM_S *state)
 {
-  free(state->data);
-
   return 0;
 }
